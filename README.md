@@ -1,4 +1,4 @@
-# dsh-projects
+# dsh-chat-projects
 
 [English](README.md) | [中文](README.zh.md)
 
@@ -22,7 +22,7 @@ project creation, rename, reorder and delete stay native.
   recorded directory is already a registered project.
 - Sessions DSH has loaded in the current run keep a frozen header and a write
   lease, so they cannot be relocated in place. Picking a target for such a
-  session **queues** the move (`<DSH_HOME>/dsh-projects/pending-moves.json`);
+  session **queues** the move (`<DSH_HOME>/dsh-chat-projects/pending-moves.json`);
   it runs automatically on the next DSH start, before any agent resumes. The
   dialog can cancel the queued move.
 - Refuses unsafe moves: running work, subagent sessions, sessions without a
@@ -39,14 +39,18 @@ project creation, rename, reorder and delete stay native.
 
 ## Install
 
-Use the CLI that ships with DSH desktop:
+Use the CLI that ships with DSH desktop. The npm package is **`dsh-chat-projects`**
+(the GitHub repository keeps its original name, `dsh-projects`):
 
 ```powershell
-# from GitHub
+# from npm (easiest)
+dsh plugin --profile desktop add dsh-chat-projects
+
+# from GitHub (repository name is dsh-projects)
 dsh plugin --profile desktop add github:Tzh0109/DSH-projects
 
 # or from a local checkout (development)
-dsh plugin --profile desktop add "link:C:\path\to\dsh-projects"
+dsh plugin --profile desktop add "link:C:\path\to\dsh-chat-projects"
 ```
 
 If `dsh` is not on `PATH`, use the bundled entry point
@@ -58,7 +62,7 @@ edits to `lib/client.js` hot-reload through the client HMR channel.
 Uninstall:
 
 ```powershell
-dsh plugin --profile desktop remove dsh-projects
+dsh plugin --profile desktop remove dsh-chat-projects
 ```
 
 ## Usage
@@ -114,9 +118,9 @@ The plugin refuses instead of forcing a move when:
 
 ### Crash recovery and manual fallback
 
-- runtime journal: `<DSH_HOME>/dsh-projects/journal.json` (removed on success)
-- original header frame backups: `<DSH_HOME>/dsh-projects/backups/`
-- staged old directory: `<DSH_HOME>/.dsh-projects-trash/` (same-volume rename,
+- runtime journal: `<DSH_HOME>/dsh-chat-projects/journal.json` (removed on success)
+- original header frame backups: `<DSH_HOME>/dsh-chat-projects/backups/`
+- staged old directory: `<DSH_HOME>/.dsh-chat-projects-trash/` (same-volume rename,
   removed on success)
 
 On startup the plugin reads the journal: `old-moved` is rolled back,
@@ -157,7 +161,7 @@ queued moves). No local DSH data is read.
 Layout:
 
 ```
-dsh-projects/
+dsh-chat-projects/
 ├─ package.json          # dsh.bundle.patch + dsh.client declarations
 ├─ cordis.patch.yml      # Host-half loader entry
 ├─ lib/
@@ -171,11 +175,11 @@ dsh-projects/
 Host API (same-origin, behind DSH's connection trust fence):
 
 ```
-GET  /plugins/dsh-projects/api/state?session=<id>
-POST /plugins/dsh-projects/api/move      {"sessionId": "...", "targetWorkspaceId": "..." | null}
-POST /plugins/dsh-projects/api/queue     {"sessionId": "...", "targetWorkspaceId": "..." | null}
-POST /plugins/dsh-projects/api/unqueue   {"sessionId": "..."}
-POST /plugins/dsh-projects/api/organize  {}
+GET  /plugins/dsh-chat-projects/api/state?session=<id>
+POST /plugins/dsh-chat-projects/api/move      {"sessionId": "...", "targetWorkspaceId": "..." | null}
+POST /plugins/dsh-chat-projects/api/queue     {"sessionId": "...", "targetWorkspaceId": "..." | null}
+POST /plugins/dsh-chat-projects/api/unqueue   {"sessionId": "..."}
+POST /plugins/dsh-chat-projects/api/organize  {}
 ```
 
 ## License

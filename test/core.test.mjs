@@ -1,5 +1,5 @@
-﻿/**
- * Offline checks for the dsh-projects moving engine.
+/**
+ * Offline checks for the dsh-chat-projects moving engine.
  *
  * These tests run outside DSH: they build throwaway sessions roots and drive
  * `createMover` with fake persistence/registry services that mimic the real
@@ -182,7 +182,7 @@ test('path derivation matches the persistence backend', () => {
 test('zstd header frame can be rewritten without touching event frames', () => {
   const bytes = makeSessionLog({ cwd: 'C:\\projects\\old' })
   const { frameEnd } = decodeHeaderFrame(bytes)
-  const target = path.join(os.tmpdir(), 'dsh-projects-target')
+  const target = path.join(os.tmpdir(), 'dsh-chat-projects-target')
   const rewritten = rewriteHeaderCwd(bytes, target)
   assert.equal(rewritten.header.cwd, target)
   assert.equal(rewritten.header.id, SESSION_ID)
@@ -206,10 +206,10 @@ test('zstd header frame can be rewritten without touching event frames', () => {
 })
 
 test('moveSession relocates the log and reconciles accounting', async () => {
-  const root = await tempDir('dsh-projects-move-')
-  const oldCwd = await tempDir('dsh-projects-old-')
-  const newCwd = await tempDir('dsh-projects-new-')
-  const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
+  const root = await tempDir('dsh-chat-projects-move-')
+  const oldCwd = await tempDir('dsh-chat-projects-old-')
+  const newCwd = await tempDir('dsh-chat-projects-new-')
+  const dataRoot = path.join(root, '..', `dsh-chat-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: oldCwd }), oldCwd).bytes
     await makeFixture(root, { cwd: oldCwd, logBytes: patched })
@@ -243,10 +243,10 @@ test('moveSession relocates the log and reconciles accounting', async () => {
 })
 
 test('a busy session is refused before anything moves', async () => {
-  const root = await tempDir('dsh-projects-busy-')
-  const oldCwd = await tempDir('dsh-projects-old-')
-  const newCwd = await tempDir('dsh-projects-new-')
-  const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
+  const root = await tempDir('dsh-chat-projects-busy-')
+  const oldCwd = await tempDir('dsh-chat-projects-old-')
+  const newCwd = await tempDir('dsh-chat-projects-new-')
+  const dataRoot = path.join(root, '..', `dsh-chat-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: oldCwd }), oldCwd).bytes
     const { logPath } = await makeFixture(root, { cwd: oldCwd, logBytes: patched })
@@ -276,10 +276,10 @@ test('a busy session is refused before anything moves', async () => {
 })
 
 test('attach failure rolls the log directory and accounting back', async () => {
-  const root = await tempDir('dsh-projects-rollback-')
-  const oldCwd = await tempDir('dsh-projects-old-')
-  const newCwd = await tempDir('dsh-projects-new-')
-  const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
+  const root = await tempDir('dsh-chat-projects-rollback-')
+  const oldCwd = await tempDir('dsh-chat-projects-old-')
+  const newCwd = await tempDir('dsh-chat-projects-new-')
+  const dataRoot = path.join(root, '..', `dsh-chat-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: oldCwd }), oldCwd).bytes
     await makeFixture(root, { cwd: oldCwd, logBytes: patched })
@@ -314,9 +314,9 @@ test('attach failure rolls the log directory and accounting back', async () => {
 })
 
 test('organize files ungrouped sessions whose directory is a project', async () => {
-  const root = await tempDir('dsh-projects-organize-')
-  const projectDir = await tempDir('dsh-projects-project-')
-  const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
+  const root = await tempDir('dsh-chat-projects-organize-')
+  const projectDir = await tempDir('dsh-chat-projects-project-')
+  const dataRoot = path.join(root, '..', `dsh-chat-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: projectDir }), projectDir).bytes
     await makeFixture(root, { cwd: projectDir, logBytes: patched })
@@ -337,10 +337,10 @@ test('organize files ungrouped sessions whose directory is a project', async () 
 })
 
 test('a loaded session can be queued and the move runs on the next startup', async () => {
-  const root = await tempDir('dsh-projects-queue-')
-  const oldCwd = await tempDir('dsh-projects-old-')
-  const newCwd = await tempDir('dsh-projects-new-')
-  const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
+  const root = await tempDir('dsh-chat-projects-queue-')
+  const oldCwd = await tempDir('dsh-chat-projects-old-')
+  const newCwd = await tempDir('dsh-chat-projects-new-')
+  const dataRoot = path.join(root, '..', `dsh-chat-projects-data-${Date.now()}`)
   const makeWorkspaces = () => [
     { id: 'ws-old', title: 'old', path: oldCwd, sessionIds: [SESSION_ID] },
     { id: 'ws-new', title: 'new', path: newCwd, sessionIds: [] },
@@ -389,5 +389,30 @@ test('a loaded session can be queued and the move runs on the next startup', asy
     await fs.rm(oldCwd, { recursive: true, force: true })
     await fs.rm(newCwd, { recursive: true, force: true })
     await fs.rm(dataRoot, { recursive: true, force: true })
+  }
+})
+
+test('the legacy dsh-projects runtime directory is migrated once', async () => {
+  const parent = await tempDir('dsh-chat-projects-legacy-')
+  const sessionsRoot = path.join(parent, 'sessions')
+  await fs.mkdir(sessionsRoot)
+  const legacyRoot = path.join(parent, 'dsh-projects')
+  await fs.mkdir(legacyRoot)
+  await fs.writeFile(path.join(legacyRoot, 'journal.json'), '{}')
+  try {
+    const persistence = fakePersistence({
+      root: sessionsRoot,
+      header: { type: 'session', version: 4, id: SESSION_ID, cwd: sessionsRoot },
+    })
+    const ctx = fakeCtx({ registry: fakeRegistry({ workspaces: [] }), persistence, activity: () => [] })
+    const mover = createMover(ctx, { sessionsRoot })
+
+    assert.equal(await mover.migrateLegacyDataRoot(), true)
+    assert.equal(await fs.stat(path.join(parent, 'dsh-chat-projects')).then(() => true, () => false), true)
+    assert.equal(await fs.stat(legacyRoot).then(() => true, () => false), false)
+    // idempotent: the new directory now exists, so nothing moves again
+    assert.equal(await mover.migrateLegacyDataRoot(), false)
+  } finally {
+    await fs.rm(parent, { recursive: true, force: true })
   }
 })

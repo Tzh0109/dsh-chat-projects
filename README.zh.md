@@ -1,4 +1,4 @@
-# dsh-projects — 像 ChatGPT Projects 一样整理 DSH 的会话与项目
+# dsh-chat-projects — 像 ChatGPT Projects 一样整理 DSH 的会话与项目
 
 [English](README.md) | [中文](README.zh.md)
 
@@ -18,14 +18,17 @@ DeepSeek Harness（DSH）里，**工作区（Workspace）= 项目文件夹**，�
 
 ## 安装
 
-用 DSH 桌面版自带的 CLI：
+用 DSH 桌面版自带的 CLI 安装。npm 包名是 **`dsh-chat-projects`**（GitHub 仓库沿用原来的名字 `dsh-projects`）：
 
 ```powershell
-# 从 GitHub 安装
+# 从 npm 安装（最省事）
+dsh plugin --profile desktop add dsh-chat-projects
+
+# 从 GitHub 安装（仓库名仍为 dsh-projects）
 dsh plugin --profile desktop add github:Tzh0109/DSH-projects
 
 # 或从本地目录安装（开发用）
-dsh plugin --profile desktop add "link:C:\path\to\dsh-projects"
+dsh plugin --profile desktop add "link:C:\path\to\dsh-chat-projects"
 ```
 
 如果 `dsh` 不在 PATH，用自带入口：
@@ -36,7 +39,7 @@ dsh plugin --profile desktop add "link:C:\path\to\dsh-projects"
 卸载：
 
 ```powershell
-dsh plugin --profile desktop remove dsh-projects
+dsh plugin --profile desktop remove dsh-chat-projects
 ```
 
 ## 使用
@@ -80,9 +83,9 @@ DSH 里「会话属于哪个项目」由三样东西同时决定：
 
 ### 崩溃恢复与手工兜底
 
-- 运行期 journal：`<DSH_HOME>/dsh-projects/journal.json`（成功即删除）
-- 原 header 帧备份：`<DSH_HOME>/dsh-projects/backups/`
-- 旧目录暂存区：`<DSH_HOME>/.dsh-projects-trash/`（同卷 rename，成功后删除）
+- 运行期 journal：`<DSH_HOME>/dsh-chat-projects/journal.json`（成功即删除）
+- 原 header 帧备份：`<DSH_HOME>/dsh-chat-projects/backups/`
+- 旧目录暂存区：`<DSH_HOME>/.dsh-chat-projects-trash/`（同卷 rename，成功后删除）
 
 插件启动时读取 journal：`old-moved` 阶段回滚、`new-written` / `verified` 阶段补完。自动恢复失败时保留 journal 并写日志，可按上面的路径手工把 trash 目录 rename 回原项目目录。
 
@@ -107,7 +110,7 @@ npm test        # node --test test/core.test.mjs
 目录：
 
 ```
-dsh-projects/
+dsh-chat-projects/
 ├─ package.json          # dsh.bundle.patch + dsh.client 声明
 ├─ cordis.patch.yml      # Host 半挂载行
 ├─ lib/
@@ -120,17 +123,17 @@ dsh-projects/
 Host API（同源，受 DSH connection 信任围栏保护）：
 
 ```
-GET  /plugins/dsh-projects/api/state?session=<id>
-POST /plugins/dsh-projects/api/move      {"sessionId": "...", "targetWorkspaceId": "..." | null}
-POST /plugins/dsh-projects/api/queue     {"sessionId": "...", "targetWorkspaceId": "..." | null}
-POST /plugins/dsh-projects/api/unqueue   {"sessionId": "..."}
-POST /plugins/dsh-projects/api/organize  {}
+GET  /plugins/dsh-chat-projects/api/state?session=<id>
+POST /plugins/dsh-chat-projects/api/move      {"sessionId": "...", "targetWorkspaceId": "..." | null}
+POST /plugins/dsh-chat-projects/api/queue     {"sessionId": "...", "targetWorkspaceId": "..." | null}
+POST /plugins/dsh-chat-projects/api/unqueue   {"sessionId": "..."}
+POST /plugins/dsh-chat-projects/api/organize  {}
 ```
 
 ## 已知问题 / 待办
 
 - 没有跨组拖拽（原生拖拽只支持同组排序；跨组需要替换整个侧栏组件，风险高）。
-- 没有「撤销上一次移动」按钮；用同样的菜单移回去即可，header 帧备份在 `dsh-projects/backups/`。
+- 没有「撤销上一次移动」按钮；用同样的菜单移回去即可，header 帧备份在 `dsh-chat-projects/backups/`。
 - 只适配 JSONL 持久化后端的磁盘布局（`compression: zstd` 与 `none`）。
 
 ## 许可

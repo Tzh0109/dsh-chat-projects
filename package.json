@@ -1,5 +1,5 @@
-{
-  "name": "dsh-projects",
+﻿{
+  "name": "dsh-chat-projects",
   "version": "0.1.0",
   "description": "ChatGPT Projects style chat organizer for DeepSeek Harness: move sessions between workspaces (projects) and file ungrouped chats back into their project.",
   "type": "module",

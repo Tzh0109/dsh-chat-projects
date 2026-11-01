@@ -1,5 +1,5 @@
-# dsh-projects bundle patch: load the Host half. The browser half is discovered
+﻿# dsh-chat-projects bundle patch: load the Host half. The browser half is discovered
 # from package.json's `dsh.client` declaration (lib/client.js).
 - insert:
-    - id: dsh-projects
-      name: dsh-projects
+    - id: dsh-chat-projects
+      name: dsh-chat-projects
