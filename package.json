@@ -48,11 +48,11 @@
   "author": "Tzh0109",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tzh0109/DSH-projects.git"
+    "url": "git+https://github.com/Tzh0109/dsh-projects.git"
   },
-  "homepage": "https://github.com/Tzh0109/DSH-projects#readme",
+  "homepage": "https://github.com/Tzh0109/dsh-projects#readme",
   "bugs": {
-    "url": "https://github.com/Tzh0109/DSH-projects/issues"
+    "url": "https://github.com/Tzh0109/dsh-projects/issues"
   },
   "publishConfig": {
     "access": "public"

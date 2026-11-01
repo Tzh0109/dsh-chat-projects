@@ -1,8 +1,8 @@
-# dsh-chat-projects — 像 ChatGPT Projects 一样整理 DSH 的会话与项目
+﻿# dsh-chat-projects — 像 ChatGPT Projects 一样整理 DSH 的会话与项目
 
 [English](README.md) | [中文](README.zh.md)
 
-[![test](https://github.com/Tzh0109/DSH-projects/actions/workflows/test.yml/badge.svg)](https://github.com/Tzh0109/DSH-projects/actions/workflows/test.yml)
+[![test](https://github.com/Tzh0109/dsh-projects/actions/workflows/test.yml/badge.svg)](https://github.com/Tzh0109/dsh-projects/actions/workflows/test.yml)
 
 DeepSeek Harness（DSH）里，**工作区（Workspace）= 项目文件夹**，会话在创建时绑死在该工作区，官方没有「把已有会话移动到另一个项目」的功能。本插件补上这块能力，并且**不替换原生侧栏**——项目的新建 / 改名 / 排序 / 删除仍然用 DSH 自带的那套。
 
@@ -25,7 +25,7 @@ DeepSeek Harness（DSH）里，**工作区（Workspace）= 项目文件夹**，�
 dsh plugin --profile desktop add dsh-chat-projects
 
 # 从 GitHub 安装（仓库名仍为 dsh-projects）
-dsh plugin --profile desktop add github:Tzh0109/DSH-projects
+dsh plugin --profile desktop add github:Tzh0109/dsh-projects
 
 # 或从本地目录安装（开发用）
 dsh plugin --profile desktop add "link:C:\path\to\dsh-chat-projects"
@@ -100,8 +100,8 @@ DSH 里「会话属于哪个项目」由三样东西同时决定：
 ## 开发
 
 ```powershell
-git clone https://github.com/Tzh0109/DSH-projects
-cd DSH-projects
+git clone https://github.com/Tzh0109/dsh-projects
+cd dsh-projects
 npm test        # node --test test/core.test.mjs
 ```
 

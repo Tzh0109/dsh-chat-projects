@@ -1,8 +1,8 @@
-# dsh-chat-projects
+﻿# dsh-chat-projects
 
 [English](README.md) | [中文](README.zh.md)
 
-[![test](https://github.com/Tzh0109/DSH-projects/actions/workflows/test.yml/badge.svg)](https://github.com/Tzh0109/DSH-projects/actions/workflows/test.yml)
+[![test](https://github.com/Tzh0109/dsh-projects/actions/workflows/test.yml/badge.svg)](https://github.com/Tzh0109/dsh-projects/actions/workflows/test.yml)
 
 ChatGPT Projects style chat organization for **DeepSeek Harness (DSH)**: move an
 existing session between workspaces (projects) from the session row menu, or
@@ -47,7 +47,7 @@ Use the CLI that ships with DSH desktop. The npm package is **`dsh-chat-projects
 dsh plugin --profile desktop add dsh-chat-projects
 
 # from GitHub (repository name is dsh-projects)
-dsh plugin --profile desktop add github:Tzh0109/DSH-projects
+dsh plugin --profile desktop add github:Tzh0109/dsh-projects
 
 # or from a local checkout (development)
 dsh plugin --profile desktop add "link:C:\path\to\dsh-chat-projects"
@@ -148,8 +148,8 @@ back manually.
 ## Development
 
 ```powershell
-git clone https://github.com/Tzh0109/DSH-projects
-cd DSH-projects
+git clone https://github.com/Tzh0109/dsh-projects
+cd dsh-projects
 npm test        # node --test test/core.test.mjs
 ```
 
