@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Offline checks for the dsh-projects moving engine.
  *
  * These tests run outside DSH: they build throwaway sessions roots and drive
@@ -30,6 +30,11 @@ import {
 
 const SESSION_ID = 'session-00000000-0000-4000-8000-000000000001'
 const CHECKSUM = { params: { [zlib.constants.ZSTD_c_checksumFlag]: 1 } }
+
+/** mkdtemp under the OS temp dir, canonicalized (Windows runners return 8.3 short paths). */
+async function tempDir(prefix) {
+  return fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), prefix)))
+}
 
 /** One checksummed zstd frame holding exactly one JSONL record. */
 function frame(record) {
@@ -201,9 +206,9 @@ test('zstd header frame can be rewritten without touching event frames', () => {
 })
 
 test('moveSession relocates the log and reconciles accounting', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-move-'))
-  const oldCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-old-'))
-  const newCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-new-'))
+  const root = await tempDir('dsh-projects-move-')
+  const oldCwd = await tempDir('dsh-projects-old-')
+  const newCwd = await tempDir('dsh-projects-new-')
   const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: oldCwd }), oldCwd).bytes
@@ -238,9 +243,9 @@ test('moveSession relocates the log and reconciles accounting', async () => {
 })
 
 test('a busy session is refused before anything moves', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-busy-'))
-  const oldCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-old-'))
-  const newCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-new-'))
+  const root = await tempDir('dsh-projects-busy-')
+  const oldCwd = await tempDir('dsh-projects-old-')
+  const newCwd = await tempDir('dsh-projects-new-')
   const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: oldCwd }), oldCwd).bytes
@@ -271,9 +276,9 @@ test('a busy session is refused before anything moves', async () => {
 })
 
 test('attach failure rolls the log directory and accounting back', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-rollback-'))
-  const oldCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-old-'))
-  const newCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-new-'))
+  const root = await tempDir('dsh-projects-rollback-')
+  const oldCwd = await tempDir('dsh-projects-old-')
+  const newCwd = await tempDir('dsh-projects-new-')
   const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: oldCwd }), oldCwd).bytes
@@ -309,8 +314,8 @@ test('attach failure rolls the log directory and accounting back', async () => {
 })
 
 test('organize files ungrouped sessions whose directory is a project', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-organize-'))
-  const projectDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-project-'))
+  const root = await tempDir('dsh-projects-organize-')
+  const projectDir = await tempDir('dsh-projects-project-')
   const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
   try {
     const patched = rewriteHeaderCwd(makeSessionLog({ cwd: projectDir }), projectDir).bytes
@@ -332,9 +337,9 @@ test('organize files ungrouped sessions whose directory is a project', async () 
 })
 
 test('a loaded session can be queued and the move runs on the next startup', async () => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-queue-'))
-  const oldCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-old-'))
-  const newCwd = await fs.mkdtemp(path.join(os.tmpdir(), 'dsh-projects-new-'))
+  const root = await tempDir('dsh-projects-queue-')
+  const oldCwd = await tempDir('dsh-projects-old-')
+  const newCwd = await tempDir('dsh-projects-new-')
   const dataRoot = path.join(root, '..', `dsh-projects-data-${Date.now()}`)
   const makeWorkspaces = () => [
     { id: 'ws-old', title: 'old', path: oldCwd, sessionIds: [SESSION_ID] },
