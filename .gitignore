@@ -1,0 +1,14 @@
+# Node
+node_modules/
+*.tgz
+
+# Test / runtime scratch
+coverage/
+.dsh-progress/
+*.log
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
