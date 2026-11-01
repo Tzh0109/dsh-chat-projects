@@ -1,4 +1,4 @@
-﻿# dsh-chat-projects — 像 ChatGPT Projects 一样整理 DSH 的会话与项目
+# dsh-chat-projects — 像 ChatGPT Projects 一样整理 DSH 的会话与项目
 
 [English](README.md) | [中文](README.zh.md)
 

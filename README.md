@@ -1,4 +1,4 @@
-﻿# dsh-chat-projects
+# dsh-chat-projects
 
 [English](README.md) | [中文](README.zh.md)
 
